@@ -36,5 +36,5 @@ func (l *ConsulKeyListener) GetKeys() ([]byte, error) {
 		return nil, err
 	}
 	l.waitIndex = qm.LastIndex
-	return json.Marshal(kvps)
+	return json.MarshalIndent(kvps, "", "\t")
 }
