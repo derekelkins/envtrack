@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 )
 
 type FileBackend struct {
@@ -13,7 +14,7 @@ func NewFileBackend(path string) Backend {
 }
 
 func (b *FileBackend) Store(data []byte) error {
-	file, err := os.Create(b.path)
+	file, err := os.Create(b.path + "-" + time.Now().Format(time.RFC3339))
 	if err != nil {
 		return err
 	}
