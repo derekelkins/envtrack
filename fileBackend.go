@@ -1,8 +1,6 @@
 package main
 
 import (
-	"errors"
-	"log"
 	"os"
 )
 
@@ -15,5 +13,15 @@ func NewFileBackend(path string) Backend {
 }
 
 func (b *FileBackend) Store(data []byte) error {
+	file, err := os.Create(b.path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
 
+	_, err = file.Write(data)
+	if err != nil {
+		return err
+	}
+	return nil
 }

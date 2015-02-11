@@ -1,13 +1,9 @@
 package main
 
 import (
-	"errors"
 	"flag"
-	"fmt"
 	"log"
 	"net/url"
-	"os"
-	"time"
 )
 
 /* Examples for flag
@@ -37,7 +33,7 @@ func main() {
 	backend := NewBackend(path)
 
 	// To allow requests to be received while we're writing to a file.
-	pipe := make(chan []byte)
+	pipe := make(chan []byte, 100)
 
 	go func() {
 		for {
@@ -61,7 +57,7 @@ func main() {
 
 func NewKeyListener(uri *url.URL) KeyListener {
 	factory := map[string]func(*url.URL) KeyListener{
-		"consul": NewConsulRegistry,
+		"consul": NewConsulKeyListener,
 		//"etcd":    NewEtcdRegistry,
 	}[uri.Scheme]
 	if factory == nil {

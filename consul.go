@@ -1,8 +1,6 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"log"
 	"net/url"
 
@@ -10,7 +8,7 @@ import (
 )
 
 type ConsulKeyListener struct {
-	client api.Client
+	client *api.Client
 	path   string
 }
 
@@ -27,7 +25,7 @@ func NewConsulKeyListener(uri *url.URL) KeyListener {
 }
 
 func (l *ConsulKeyListener) GetKeys() ([]byte, error) {
-	kv := client.KV()
+	kv := l.client.KV()
 	// Use KV.List http://godoc.org/github.com/hashicorp/consul/api#KV.List
 
 }
