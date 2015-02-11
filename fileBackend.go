@@ -1,17 +1,17 @@
 package main
 
 import (
-    "errors"
-    "log"
-    "os"
+	"errors"
+	"log"
+	"os"
 )
 
 type FileBackend struct {
-    path string
+	path string
 }
 
 func NewFileBackend(path string) Backend {
-    return &FileBackend{path: path}
+	return &FileBackend{path: path}
 }
 
 func (b *FileBackend) Store(data []byte) error {

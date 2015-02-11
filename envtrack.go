@@ -17,11 +17,11 @@ var refreshInterval = flag.Int("ttl-refresh", 0, "Frequency with which service T
 */
 
 type KeyListener interface {
-    GetKeys() []byte, error
+	GetKeys() ([]byte, error)
 }
 
 type Backend interface {
-    Store(data []byte) error
+	Store(data []byte) error
 }
 
 func main() {
@@ -32,15 +32,44 @@ func main() {
 		log.Fatal("envtrack: ", err)
 	}
 	listener := NewKeyListener(uri)
+
+	path := "TODO"
+	backend := NewBackend(path)
+
+	// To allow requests to be received while we're writing to a file.
+	pipe := make(chan []byte)
+
+	go func() {
+		for {
+			data, err := listener.GetKeys()
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			pipe <- data
+		}
+	}()
+
+	for data := range pipe {
+		err := backend.Store(data)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+	}
 }
 
 func NewKeyListener(uri *url.URL) KeyListener {
 	factory := map[string]func(*url.URL) KeyListener{
-		"consul":  NewConsulRegistry,
+		"consul": NewConsulRegistry,
 		//"etcd":    NewEtcdRegistry,
 	}[uri.Scheme]
 	if factory == nil {
 		log.Fatal("unrecognized listener: ", uri.Scheme)
 	}
 	return factory(uri)
+}
+
+func NewBackend(path string) Backend {
+	return NewFileBackend(path)
 }
