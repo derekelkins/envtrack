@@ -15,3 +15,9 @@ envtrack -backend=git consul://consul.service.consul:8500/tracked/
 ```
 
 Assuming the directory this is executed in is a Git repository, this will make a file called `config` with the values of all of the keys under `/tracked`.  Any time a key is updated, the `config` file will be updated and committed.
+
+```bash
+envtrack -script consul://consul.service.consul:8500/tracked/
+```
+
+This command will print a collection of `curl` commands to set the keys in Consul.  This is also useful to base64 decode the keys.
