@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"os/exec"
-	"time"
 )
 
 type GitBackend struct {
@@ -26,6 +25,9 @@ func (b *GitBackend) Store(data []byte) error {
 		return err
 	}
 
-	err = exec.Command("git", "commit", "-m", time.Now().Format(time.RFC1123Z)).Run()
-	return err
+	err = exec.Command("git", "add", b.path).Run()
+	if err != nil {
+		return err
+	}
+	return exec.Command("git", "commit", "-m", "envtrack auto-commit").Run()
 }
