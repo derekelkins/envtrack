@@ -64,7 +64,7 @@ func (l *ConsulKeyListener) Script(srcPath string) error {
 
 	separator := rand.Int63()
 	for _, kvp := range kvps {
-		_, err := fmt.Printf("curl -X PUT %s://%s/v1/kv/%s <<EOF-%d\n%s\nEOF-%d\n",
+		_, err := fmt.Printf("curl -X PUT '%s://%s/v1/kv/%s' <<EOF-%d\n%s\nEOF-%d\n",
 			l.config.Scheme,
 			l.config.Address,
 			kvp.Key,
