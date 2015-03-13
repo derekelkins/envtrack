@@ -43,6 +43,9 @@ func (l *ConsulKeyListener) GetKeys() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	if qm.LastIndex == l.waitIndex { // No change
+		return nil, nil
+	}
 	l.waitIndex = qm.LastIndex
 	return json.MarshalIndent(kvps, "", "\t")
 }
@@ -58,6 +61,11 @@ func (l *ConsulKeyListener) Script(srcPath string) error {
 
 	dec := json.NewDecoder(src)
 	err = dec.Decode(&kvps)
+	if err != nil {
+		return err
+	}
+
+	_, err = fmt.Printf("curl -X DELETE '%s://%s/v1/kv%s?recurse=1'\n", l.config.Scheme, l.config.Address, l.path)
 	if err != nil {
 		return err
 	}

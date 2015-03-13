@@ -47,7 +47,9 @@ func main() {
 					log.Println(err)
 					continue
 				}
-				pipe <- data
+				if data != nil {
+					pipe <- data
+				}
 			}
 		}()
 
